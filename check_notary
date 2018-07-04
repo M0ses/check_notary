@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use LWP::UserAgent ();
+use Monitoring::Plugin;
+use JSON::MaybeXS;
+use Data::Dumper;
+
+my $mp = Monitoring::Plugin->new(
+           usage => 'Usage: %s <-u|--url=URL> [-r|--records=INT]',
+         );
+
+$mp->add_arg(
+  spec     => 'url|u=s',
+  help     => '-u, --url=STRING . URL for notary server',
+  required => 1,
+);
+
+$mp->add_arg(
+  spec    => 'records|r=i',
+  help    => '-r, --records=INT . Number of records to fetch from notary',
+  default => 1,
+);
+
+$mp->getopts;
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(10);
+$ua->env_proxy;
+
+my $url     = $mp->opts->url;
+my $records = $mp->opts->records;
+
+my $response = $ua->get("$url/v2/_trust/changefeed?records=$records");
+
+if ($response->is_success) {
+  my $data = decode_json($response->decoded_content);
+  my $cnt  = @{$data->{records}};
+  if ($cnt != $records) {
+    $mp->plugin_exit(CRITICAL, "Record mismatch: requested $records records but got $cnt");
+  } else {
+    $mp->plugin_exit(OK, "Found $records records");
+  }
+} else {
+  $mp->plugin_exit(CRITICAL, $response->status_line);
+}

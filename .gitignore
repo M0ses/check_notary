@@ -28,8 +28,10 @@ inc/
 /blib/
 /_eumm/
 /*.gz
-/Makefile
 /Makefile.old
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+*.sw?
+*.tdy
+.internal_check.sh
