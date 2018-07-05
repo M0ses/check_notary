@@ -50,7 +50,7 @@ jobs:
         - zypper ar obs://home:M0ses home:M0ses
         - zypper --gpg-auto-import-keys ref -s
         # install devel environment
-        - zypper -n in vim-data sudo git-core make
+        - zypper -n in vim-data sudo git-core make perl-Perl-Tidy perl-Perl-Critic
         # install package dependencies
         - zypper -n in perl-Monitoring-Plugin perl-libwww-perl perl-JSON-MaybeXS perl-LWP-Protocol-https
         # internal checks

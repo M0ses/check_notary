@@ -35,3 +35,6 @@ inc/
 *.sw?
 *.tdy
 .internal_check.sh
+*.bak
+*.DEBUG
+*.LOG

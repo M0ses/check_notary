@@ -8,8 +8,8 @@ use JSON::MaybeXS;
 use Data::Dumper;
 
 my $mp = Monitoring::Plugin->new(
-           usage => 'Usage: %s <-u|--url=URL> [-r|--records=INT]',
-         );
+  usage => 'Usage: %s <-u|--url=URL> [-r|--records=INT]',
+);
 
 $mp->add_arg(
   spec     => 'url|u=s',
@@ -38,7 +38,10 @@ if ($response->is_success) {
   my $data = decode_json($response->decoded_content);
   my $cnt  = @{$data->{records}};
   if ($cnt != $records) {
-    $mp->plugin_exit(CRITICAL, "Record mismatch: requested $records records but got $cnt");
+    $mp->plugin_exit(
+      CRITICAL,
+      "Record mismatch: requested $records records but got $cnt"
+    );
   } else {
     $mp->plugin_exit(OK, "Found $records records");
   }
